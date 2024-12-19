@@ -1,0 +1,15 @@
+<%- include("../common/login_header.ejs") %>
+<div class="container pt-5 text-center">
+	<% if(status == 1){ %>
+		<h2 style="text-align:center;">Invalid Invite Link</h2>
+		<p class="text-center">You have entered an invalid invitation link.</p>
+	<%} else if(status == 2){ %>
+		<h2 style="text-align:center;">Signup Completed</h2>
+		<p class="text-center">You have already completed the sign up process</p>
+		<a href="<%= baseUrl %>/sign_in"><button class="siteBtn">Sign In Now</button></a>
+	<%} else if(status == 3){ %>
+		<h2 style="text-align:center;">Expired Invite Link</h2>
+		<p class="text-center">Your invitation link has been expired.</p>
+	<%} %>    
+</div>
+<%- include("../common/login_footer.ejs") %>

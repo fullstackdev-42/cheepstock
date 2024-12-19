@@ -1,0 +1,129 @@
+<%- include("../common/login_header.ejs") %>
+<div class="container d-flex align-items-center">
+	<form class="form-panel form-structor signin-form" name="loginForm" id="loginForm">
+		<h2>Sign In</h2>
+
+		<div class="form-holder">
+			<div class="uname_box">
+				<input type="email" class="input" name="email" id="email" placeholder="Email" required/>
+			</div>
+			<div class="uname_box mt-4">
+				<input type="password" class="input" name="password" id="password" placeholder="Password" required/>
+			</div>
+		</div>
+		<label class="checkbox-container mt-4">Remember Me
+			<input type="checkbox" name="remember" id="remember" checked="checked">
+			<span class="checkmark"></span>
+		</label>
+		<button class="control btn siteBtn loginBtn" type="button">Sign In</button>
+	</form>
+
+	<form class="form-panel form-structor otp-form" id="OTPForm" name="OTPForm" style="display: none;">
+		<h2>Enter the 6 digit code sent to your email address</h2>
+
+		<div class="form-holder">
+			<div class="uname_box">
+				<input type="text" class="input" name="otp_code" id="otp_code" minlength="6" maxlength="6" placeholder="OTP Code" required/>
+				<input type="hidden" id="user_id" name="user_id" value=""/>
+			</div>
+		</div>
+			<button class="control btn siteBtn verifyBtn" type="button">Submit</button>
+	</form>
+</div>
+<script>
+	let urlBase = "<%= baseUrl %>";
+	$(document).ready(function() {
+		$('#loginForm').validate({
+			messages: {
+        		email: {
+					required: "Enter your E-Mail ID.",
+					email: "Please enter a valid E-Mail ID.",
+				},
+				password: { required: "Enter your Password." },
+			}
+		});
+
+		$(document).on("keypress", "#otp_code", function(event){
+    		if(event.keyCode == 13) {
+      			event.preventDefault();
+      			return false;
+    		}
+  		});
+	});
+
+	$(document).on("click", ".loginBtn", function(){
+		let valid = $(".signin-form").valid();
+		if(valid) {
+			processForm();
+		}
+	});
+	$(document).on("click", ".verifyBtn", function(){
+		let valid = $(".otp-form").valid();
+		if(valid){
+			processForm2();
+		}
+	});
+
+	function processForm() {
+		let btn = document.getElementsByClassName("loginBtn")[0];
+		let btnPrev = btn.innerHTML;
+		btn.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> ' + btnPrev;
+		let data = {};
+		new FormData(loginForm).forEach((value, key) => data[key] = value);
+		$.ajax({
+            url: urlBase + '/dologin',
+            data: JSON.stringify(data),
+            type: 'POST',
+            success: function (resp) {
+                if(resp.msg == "iperror"){
+                	$("#loginForm").hide();
+                	$("#OTPForm").show();
+					$("#userIdVerify").val(resp.user_id);					
+					localStorage.setItem("verifyAttempt",0);
+                } else if(resp.msg == "success"){
+                	swal("",resp.succMsg,"success");
+					btn.innerHTML = btnPrev;
+                	setTimeout(function(){window.location.href = resp.redirectUrl;},2000);
+				} else {
+					btn.innerHTML = btnPrev;
+					swal("",resp.errMsg,"error");
+				}
+            },
+            error: function (err) {
+				let btnPrev = btn.innerHTML;
+                swal("","Error in Processing.Try again later","error");
+                setTimeout(function(){window.location.reload();},2000);
+            }
+        });
+	}
+
+	function processForm2() {
+		let data = {};
+		let attempt = parseInt(localStorage.getItem("verifyAttempt")) + 1;
+		localStorage.setItem("verifyAttempt", attempt);
+		let formData = new FormData(OTPForm);
+		formData.append('attempt',attempt);
+		formData.forEach((value, key) => data[key] = value);
+		$.ajax({
+            url: urlBase + '/dologin_otp',
+            data: JSON.stringify(data),
+            type: 'POST',
+            success: function (resp) {
+                if(resp.msg == "success"){
+                	swal("",resp.succMsg,"success");
+                	setTimeout(function(){window.location.href = resp.redirectUrl;},2000);
+				} else if (resp.msg == "suspended"){
+                	swal("",resp.errMsg,"error");
+                	setTimeout(function(){window.location.href = resp.redirectUrl;},2000);
+				} else {
+					swal("",resp.errMsg,"error");
+				}
+            },
+            error: function (err) {
+                swal("","Error in Processing.Try again later","error");
+                setTimeout(function(){window.location.reload();},2000);
+            }
+        });
+	}
+</script>
+<%- include("../common/login_footer.ejs") %>

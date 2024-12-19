@@ -1,0 +1,9 @@
+<%- include("../common/admin_header.ejs") %>
+<div class="container" style= "min-height: calc(100vh - 115px)">
+    <h2 class="pt-3 text-center"> Animator Dashboard</h2>
+    <h4> Welcome <%= animatorName%>,</h4>
+</div>
+<script>
+    document.getElementById("logout_butt").setAttribute("href", '/cs-animator/logout');
+</script>
+<%- include("../common/admin_footer.ejs") %>

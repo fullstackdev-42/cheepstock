@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>CheepStock</title>
+		
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/font-awesome.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/animate.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/sweetalert.min.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/responsive.css"/>
+		<link rel="stylesheet" type="text/css" href="/css/form_style.css"/>
+
+		<script src="/js/jquery-3.3.1.min.js"></script>
+	    <script src="/js/bootstrap.min.js"></script>
+		<script src="/js/jquery.validate.min.js"></script>
+		<script src="/js/wow.min.js" type="text/javascript"></script>
+		<script src="/js/sweetalert.js"></script>
+		<script type="text/javascript">
+			var wow = new WOW({
+				    boxClass:     'wow',      // animated element css class (default is wow)
+				    animateClass: 'animated', // animation css class (default is animated)
+				    offset:       0,          // distance to the element when triggering the animation (default is 0)
+				    mobile:       true,       // trigger animations on mobile devices (default is true)
+				    live:         true,       // act on asynchronously loaded content (default is true)
+				    callback:     function(box) {
+				      // the callback is fired every time an animation is started
+				      // the argument that is passed in is the DOM node being animated
+				  },
+				  scrollContainer: null // optional scroll container selector, otherwise use window
+				});
+			wow.init();
+		</script>
+	</head>
+	<body onresize="resized()">
+		<div class="menubar">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="container">
+					<a href="/"><img src="/images/logo.png"></a>
+					<div class="navbar pull-right">
+						<div class="navbar-toggler siteBtn" type="button" data-toggle="collapse" data-target="#navbarNav" aria-expanded="false" aria-label="Navigation Toggle">
+							<span class="navbar-toggler-icon"></span>
+						</div>
+						<div class="collapse navbar-collapse menu-item" id="navbarNav">
+							<ul class="navbar-nav">
+								<a href="javascript:void(0)" class="closebtn" data-toggle="collapse" data-target="#navbarNav" aria-expanded="false" aria-label="Navigation Toggle">&times;</a>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" id="navDrpMenu" role="button" data-toggle="dropdown">Video</a>
+									<div class="dropdown-menu" style="background-color: #f8f9fa;" id="videos" aria-labelledby="navDrpMenu">
+										<a class="dropdown-item" href="#">Link 1</a>
+										<a class="dropdown-item" href="#">Link 2</a>
+										<a class="dropdown-item" href="#">Link 3</a>
+									</div>
+								</li>
+								<li class="nav-item">
+									<button class="btn siteBtn" href="#">SEE PLANS & PRICING</button>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="#home"><sup class="align-text-top"><img src="/images/star.svg"/></sup> Saved</a>
+								</li>
+								<li class="nav-item">    
+									<a class="nav-link" id = "signInLink" href="/cs-user/sign_in">Sign in</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</div>
+
+		<script>
+			menu = document.getElementById("navDrpMenu");
+			menuItems = document.getElementById("videos");
+			let menuBorder = "";
+			window.addEventListener('DOMContentLoaded', (event) => {
+				menuBorder = menuItems.style.border;
+				menuChange();
+			});
+			function resized() {
+				menuChange();
+			}
+			function menuChange() {
+				if(window.innerWidth < 992) {
+					menuItems.style.border = 0;
+				} else {
+					menuItems.style.border = menuBorder;
+				}
+			}
+		</script>

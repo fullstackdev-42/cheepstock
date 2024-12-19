@@ -1,0 +1,9 @@
+<%- include("../common/header") %>
+<div class="container" style= "min-height: calc(100vh - 450px)">
+    <h4 class="pt-2"> Welcome <%= animatorName%>,</h4>
+</div>
+<script>
+    document.getElementById("signInLink").innerHTML = "Sign Out";
+    document.getElementById("signInLink").href = "/cs-user/logout";
+</script>
+<%- include("../common/footer") %>

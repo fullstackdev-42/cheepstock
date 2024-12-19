@@ -1,0 +1,65 @@
+<%if(typeof users !="undefined" && users != ''){%>
+	<%users.forEach(function(result, index) {%>
+		<%
+		if (typeof result.user_name == 'undefined' || result.user_name == null) {
+			result.user_name = '-';
+		}
+		if (typeof result.user_email == 'undefined' || result.user_email == null) {
+			result.email = '-';
+		}
+		if (typeof result.user_type == 'undefined' || result.user_type == null) {
+			result.user_type = '-';
+		}
+		%>
+		<tr>
+			<td class="checkbox_td">
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="user_<%=index%>" data-id="<%=result.user_id%>">
+					<label class="custom-control-label" for="user_<%=index%>"></label>
+				</div>
+			</td>
+			<td class="username_td text-left" data-title="Name: "><%=result.user_name%></td>
+			<td class="email_td text-left" data-title="Email: "><%=result.user_email%></td>									
+			<td class="user_type_td text-left" data-title="User type: " style="text-transform: capitalize;">
+			<%if(result.user_type == 1){%>
+				Super Admin
+			<%} else if(result.user_type == 2){%>
+				CS Admin
+			<%} else{ %>
+				-
+			<%}%>
+			</td>
+			<td class="phone_number_td text-left" data-title="Created Time:">
+			<% if(result.created_time_tstamp) {
+                    var d = new Date(result.created_time_tstamp);
+                    var hours = d.getHours();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12;
+                    var datestring = ("0" + (d.getMonth()+1)).slice(-2) + "/" + ("0"+ d.getDate()).slice(-2) + "/" +
+d.getFullYear() + " " + ("0" + hours).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2) + " "+ampm + " \n"+(d.toTimeString().match(/\((.+)\)/)[1]).match(/\b\w/g).join("").toUpperCase();
+                } else {
+                    var datestring = '-';
+                }                                        
+                %>
+                <%=datestring%>
+            </td>
+			<td class="user_status_td txtcenter">
+				<a class="status_update" rel="tooltip" data-toggle="tooltip" title="User Status" data-placement="top" data-id="<%=result.user_id%>">
+					<%if(result.status == 1){%>
+						<a title="Active"><div class="green"></div></a>
+					<%} else{%>
+						<a title="InActive"><div class="red"></div></a>
+					<%}%>
+				</a>
+			</td>
+		</tr>
+	<%})%>
+<%} else {%>
+<tr>
+	<td colspan="6" style="background: #FFC235;color:#000;">
+		<i class="not_found">No <%= contentType %>s found!</i>
+	</td>
+</tr>
+<%}%>
+<input type="hidden" class="pagination_filter_total_count" value="<%=Math.ceil(userdata_count/10)%>">

@@ -1,0 +1,95 @@
+<%- include("../common/login_header.ejs") %>
+<div class="container d-flex align-items-center">
+    <form class="form-panel form-structor" id="completeSignupForm">
+        <h2>Complete SignUp</h2>
+        <div class="form-holder">
+            <div class="uname_box">
+                <input type="text" class="input" name="userNameTxt" id="userNameTxt" placeholder="User Name" style="text-transform: capitalize;" required pattern="^[A-Za-z\s]+$"/>
+            </div>
+            <div class="uname_box mt-4">
+                <input type="email" class="input" name="emailTxt" id="emailTxt" placeholder="Email ID" value="<%= email %>" required disabled/>
+            </div>
+            <div class="uname_box mt-4">
+                <select class="input" id = "userTypeSel" disabled>
+                    <option value="2">Admin</option>
+                    <option value="3">Animator</option>
+                    <option value="4">User</option>
+                </select>
+            </div>
+            <div class="uname_box mt-4">
+                <input type="password" class="input" name="passwdTxt" id="passwdTxt" placeholder="Password" required/>
+            </div>
+            <div class="uname_box mt-4">
+                <input type="password" class="input" name="confPasswdTxt" id="confPasswdTxt " data-rule-equalTo="#passwdTxt" placeholder="Confirm Password" required/>
+            </div>
+        </div>
+        <div class="m-auto text-center">
+            <button class="btn siteBtn submitBtn mt-4" type="button">Submit</button>
+        </div>
+    </form>
+</div>
+<script>
+    let baseUrl = "<%= baseUrl %>";
+    let user_type = "<%= accTyp %>";
+    let user_email = "<%= email %>";
+    window.addEventListener('DOMContentLoaded', (event) => {
+        $('#completeSignupForm').validate({
+			messages: {
+        		userNameTxt: { required: "Enter your Name." },
+				passwdTxt: { required: "Enter your Password." },
+				confPasswdTxt: {
+					required: "Re-Enter your password.",
+					equalTo: "Password and confirm password must be same."
+				}
+			}
+		});
+        $.validator.methods.pattern = function(value, element) {
+            return (this.optional(element) || new RegExp(element.pattern).test(value));
+        };
+        $.validator.messages.pattern = "User Name should have alphabets only.";
+
+        let acctype = user_type;
+        let selctrl = document.getElementById('userTypeSel');
+        let types = selctrl.options;
+        for (var type, j = 0; type = types[j]; j++) {
+            if (type.value == acctype) {
+                selctrl.selectedIndex = j;
+                break;
+            }
+        }
+    });
+
+    $(document).on("click", ".submitBtn", function(){
+        var valid = $("#completeSignupForm").valid();
+        if(valid){
+            processForm();
+        }
+    });
+    async function processForm() {
+        var ret = false;
+        let data = {};        
+        data.email = user_email;
+        data.user_type = user_type;
+        data.name = document.getElementById("userNameTxt").value;
+        data.name = data.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        data.password = document.getElementById("passwdTxt").value;
+        $.ajax({
+            url: baseUrl + '/complete_signup',
+            data: JSON.stringify(data),
+            type: 'POST',
+            success: function (resp) {
+                if(resp.msg == "success"){
+                    swal("",resp.succMsg,"success");
+                    setTimeout(function(){window.location.href = resp.redirectUrl;},2000);
+                } else {
+                    swal("",resp.errMsg,"error");
+                }
+            },
+            error: function (err) {
+                swal("","Error in Processing.Try again later","error");
+                setTimeout(function(){window.location.reload();},2000);
+            }
+        });
+    }
+</script>
+<%- include("../common/login_footer.ejs") %>

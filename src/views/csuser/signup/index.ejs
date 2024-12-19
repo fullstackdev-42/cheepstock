@@ -1,0 +1,82 @@
+<%- include("../../common/header.ejs") %>
+<div class="container d-flex align-items-center">
+	<form class="form-panel form-structor signup-form" id="signUpForm" name="signUpForm">
+		<h2>Sign Up</h2>
+		<div class="form-holder">
+			<div class="uname_box">
+				<input class="input" type="text" id="firstNameTxt" name="firstNameTxt" style="text-transform: capitalize;" placeholder="First Name" required pattern="^[A-Za-z\s]+$"/>
+			</div>
+			<div class="uname_box mt-4">
+				<input class="input" type="text" id="lastNameTxt" name="lastNameTxt" style="text-transform: capitalize;" placeholder="Last Name" required pattern="^[A-Za-z\s]+$"/>
+			</div>
+			<div class="uname_box mt-4">
+				<input class="input" type="email" id="emailTxt" name="emailTxt" placeholder="Email ID" required/>
+			</div>
+			<div class="uname_box mt-4">
+				<input class="input" type="password" id="passwordTxt" name="passwordTxt" placeholder="Password" autocomplete="on" required/>
+			</div>
+			<div class="uname_box mt-4">
+				<input class="input" type="password" id="confPasswordTxt" name="confPasswordTxt" data-rule-equalTo="#passwordTxt" placeholder="Confirm Password" autocomplete="on" required/>
+			</div>
+		</div>
+		<div class="m-auto text-center">
+			<button class="btn siteBtn mt-4 submitBtn" type="button">Sign Up!</button>
+		</div>
+	</form>
+</div>
+<script>
+	window.addEventListener('DOMContentLoaded', (event) => {
+		$('#signUpForm').validate({
+			messages: {
+        		firstNameTxt: { required: "Enter your First Name." },
+        		lastNameTxt: { required: "Enter your Last Name." },
+        		emailTxt: {
+					required: "Enter your E-Mail ID.",
+					email: "Please enter a valid E-Mail ID.",
+				},
+				passwordTxt: { required: "Enter your Password." },
+				confPasswordTxt: {
+					required: "Re-Enter your password.",
+					equalTo: "Password and confirm password must be same."
+				}
+			}
+		});
+		$.validator.methods.pattern = function(value, element) {
+            return (this.optional(element) || new RegExp(element.pattern).test(value));
+        };
+        $.validator.messages.pattern = "Name must have alphabets only.";
+	});
+	$('.submitBtn').on('click', function(){
+		let valid = $('#signUpForm').valid();
+		if(valid) {
+			processForm();
+		}
+	});
+	function processForm() {
+		data = {};
+		data.name = document.getElementById('firstNameTxt').value + ' ' + document.getElementById('lastNameTxt').value;
+		data.name = data.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		data.email = document.getElementById('emailTxt').value;
+		data.password = document.getElementById('passwordTxt').value;
+		console.log(data);
+		$.ajax({
+            url: "/cs-user/sign_up/dosignup",
+            data: JSON.stringify(data),
+            type: 'POST',
+            success: function (resp) {
+                if(resp.msg == "success"){
+                    swal("",resp.succMsg,"success");
+                    setTimeout(function(){window.location.href = resp.redirectUrl;},2000);
+                } else {
+                    swal("",resp.errMsg,"error");
+					document.getElementById("signUpForm").reset();
+                }
+            },
+            error: function (err) {
+                swal("","Error in Processing.Try again later","error");
+                setTimeout(function(){window.location.reload();},2000);
+            }
+        });
+	}
+</script>
+<%- include("../../common/footer.ejs") %>

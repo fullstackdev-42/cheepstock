@@ -1,0 +1,341 @@
+<%- include("../../common/admin_header.ejs") %>
+
+<script type="text/javascript" src="/js/twbsPagination.min.js"></script>
+<div style="padding: 20px; background: #EEE;" class="for_min_height">
+	<% if(locals.sessionval.logged_user_type != "2") {%>
+		<% contentType = "Admin"%>
+	<% } else { %>
+		<% contentType = "Animator" %>
+	<% }%>
+	<h2 class="center-text"><%= contentType%> Management</h2>
+	<div>
+		<div class="full_body_parts mb-3">
+	        <div class="top_head" style="width:100%;">
+				<span class="mt-3" style="float: left;display: block;margin: 10px 10px 0 0;">Search:</span>
+	            <input type="text" class="search_val name_search mr-2" value="" Placeholder="Name">
+	            <button type="button" class="filter-btn siteBtn mt-2 wid200px mr-2" id="filter">Filter</button>
+	            <button type="button" class="filter-btn siteBtn mt-2 wid200px" id="clear" style="display:none">Clear</button>
+	            <button class="siteBtn pull-right callInvite mt-2">Invite <%= contentType %></button>
+	        </div>
+	    </div>
+		<div class="no-more-tables mt-3" style="padding-bottom: 10px; background: #fff;clear: both;">
+		    <div style="padding: 20px;">
+		        <table class="table table-striped transtbl paleBlueRows" id="listPage">
+		            <thead>
+		            <tr>
+		                <th style="width: 50px;">
+		                    <div class="custom-control custom-checkbox">
+		                        <input type="checkbox" class="custom-control-input" id="user_all" data-id="all_users">
+		                        <label class="custom-control-label" for="user_all"></label>
+		                    </div>
+		                </th>
+		                <th style="width: 25%" class="text-left">Name</th>
+		                <th style="width: 25%" class="text-left">Email address</th>		                
+		                <th style="width: 15%" class="text-left">User type</th>
+		                <th style="width: 20%" class="text-left">Created Time</th>
+		                <th style="width: 10%">User status</th>
+		            </tr>
+		            </thead>                
+					<tbody class="user_management_field">
+						<%if(typeof users !="undefined" && users != ''){%>
+							<%users.forEach(function(result, index) {%>
+								<%
+								if (typeof result.user_name == 'undefined' || result.user_name == null) {
+									result.user_name = '-';
+								}
+								if (typeof result.user_email == 'undefined' || result.user_email == null) {
+									result.email = '-';
+								}
+								if (typeof result.user_type == 'undefined' || result.user_type == null) {
+									result.user_type = '-';
+								}
+								%>
+								<tr>
+									<td class="checkbox_td">
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="user_<%=index%>" data-id="<%=result.user_id%>">
+											<label class="custom-control-label" for="user_<%=index%>"></label>
+										</div>
+									</td>
+									<td class="username_td text-left" data-title="Name: "><%=result.user_name%></td>
+									<td class="email_td text-left" data-title="Email: "><%=result.user_email%></td>
+									<td class="user_type_td text-left" data-title="User type: " style="text-transform: capitalize;">
+										<%if(result.user_type == 2){%>
+											<%="CS Admin" %>
+										<%} else if(result.user_type == 3) {%>
+											<%=" CS Animator" %>
+										<%} else if(result.user_type == 4) {%>
+											<%= "CS User" %>
+										<%} else{ %>
+											<%= "-" %>
+										<%}%>
+									</td>
+									<td class="phone_number_td text-left" data-title="Created Time:">
+									<% if(result.created_time_tstamp) {
+                                            var d = new Date(result.created_time_tstamp);
+                                            var hours = d.getHours();
+                                            var ampm = hours >= 12 ? 'PM' : 'AM';
+                                            hours = hours % 12;
+                                            hours = hours ? hours : 12;
+                                            var datestring = ("0" + (d.getMonth()+1)).slice(-2) + "/" + ("0"+ d.getDate()).slice(-2) + "/" +
+    d.getFullYear() + " " + ("0" + hours).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2) + " "+ampm + " \n"+(d.toTimeString().match(/\((.+)\)/)[1]).match(/\b\w/g).join("").toUpperCase();
+                                        } else {
+                                            var datestring = '-';
+                                        }                                        
+                                        %>
+                                        <%=datestring%>
+                                    </td>
+									<td class="user_status_td txtcenter">
+										<a class="status_update" rel="tooltip" data-toggle="tooltip" title="User Status" data-placement="top" data-id="<%=result.user_id%>">
+											<%if(result.status == 1){%>
+												<a title="Active"><div class="green"></div></a>
+											<%} else{%>
+												<a title="InActive"><div class="red"></div></a>
+											<%}%>
+										</a>
+									</td>
+								</tr>
+							<%})%>
+						<%} else {%>
+						<tr>
+							<td colspan="6" style="background: #FFC235;color:#000;">
+								<i class="not_found">No <%= contentType %>s found!</i>
+							</td>
+						</tr>
+						<%}%>
+					</tbody>
+		            
+		        </table>
+		        <input type="hidden" class="userm_name" value="">
+		        <input type="hidden" class="userm_type" value="desc">
+		    </div>
+		    <div class="ml-1 mr-1 bottom_support_content row" style="background: #fff; padding: 10px;">
+		        <div class="col col-12 col-lg-6 col-sm-12 col-xl-6 mbottom_mob">
+					<select id="userAction" name="userAction">
+						<option value="Select Action">Select Action</option>
+						<option value="delete">Delete Users</option>
+					</select>
+				</div>
+				<div class="col col-12 col-lg-6 col-sm-12 col-xl-6">
+					<%if(typeof users !="undefined" && users != ''){%>
+		                <input type="hidden" class="pending_transaction_total_count" value="<%=Math.ceil(counts/10)%>">
+						<ul id="paginate_content" style="float:right"></ul>
+					<%}%>
+				</div>
+		    </div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="inviteModal">
+      <div class="modal-dialog" role="document" style="min-width: 700px;">
+        <div class="modal-content">
+          <div class="modal-header" style="background:#fff;color:#000;font-weight:bold;text-align:center;">
+            <h5 class="modal-title" style="margin: 0 auto;width: 100%;">Invite <%= contentType %></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div>
+                <div class="row">
+                	<div class="col-12">
+                		<form class="form-group" id="inviteForm">
+                			<p>Enter the email of the user you want to invite</p>
+                			<input class="input wid100" type="email" name="invite_email" id="invite_email" value="" placeholder="Email Address" required/>
+                		</form>
+                	</div>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer text-center" style="border:none;">
+            <button type="button" name="setInvite" id="setInvite" class="siteBtn">Invite</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+	let inviteType = "<%= contentType %>";
+	$("#userAction").on("change", function(event) {		
+		let selectedUsers = [];		
+		if($("#userAction").val() == "delete") {
+			const userChecks = document.getElementsByClassName('custom-control-input');
+			for (const control of userChecks) {					
+        		if (control.type == 'checkbox' && control.id != "user_all") {
+        			if(control.checked) {						
+            			selectedUsers.push(control.getAttribute("data-id"));
+    				}
+    			}					
+			}
+			if(selectedUsers.length == 0) {
+				swal("","No Users Selected!","info");
+			} else {
+				swal({
+					title: "",
+					text: "Are you sure to delete the selected Users!",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonText: "Yes, Delete",
+					confirmButtonColor: "#FFC235",
+					closeOnConfirm: false,
+				},
+				function(isConfirm) {
+					if(isConfirm) {						
+						$.ajax({
+	           				url: '/cs-admin/user_management/delete_user',
+	           				data: JSON.stringify({userList: selectedUsers}),
+	           				type: 'POST',
+	            			success: function (resp) {
+	                			if(resp.msg == "success") {
+	                				swal("",resp.succMsg,"success");
+	                				setTimeout(function(){window.location.reload();},2000);
+								} else {
+									swal("",resp.errMsg,"error");
+								}
+	    	        		},
+	        	    		error: function (err) {
+	                			swal("","Error in Processing.Try again later","error");
+	                			setTimeout(function(){window.location.reload();},2000);
+	            			}
+						});
+					}
+				});
+			}
+		}
+		$(this).val("Select Action");
+	});
+	$(document).ready(function(){
+		$("#inviteForm").validate({
+			messages: {
+				invite_email: {
+					required: "Enter E-Mail ID to invite.",
+					email: "Enter a valid E-Mail ID"
+				}
+			}
+		});
+		document.getElementById("manageMenu").innerHTML = inviteType + ' Management';
+		$('#userAction').select2({
+			width: '140px'
+		}).on('select2:open',function(){
+			$('.select2-dropdown--above').attr('id','fix');
+			$('#fix').addClass('select2-dropdown--below');
+			$('#fix').removeClass('select2-dropdown--above');
+		});
+
+		var page_count = jQuery(".pending_transaction_total_count").val();
+        $('#paginate_content').twbsPagination({
+            totalPages: page_count,
+            visiblePages: 5,
+            first:'<i class="fa fa-angle-double-left"/>',
+            next: '<i class="fa fa-angle-right"/>',
+            prev: '<i class="fa fa-angle-left"/>',
+            last: '<i class="fa fa-angle-double-right"/>',
+            initiateStartPageClick: false,
+            onPageClick: function (event, page) {
+                Pagination(page);
+            }
+        });
+
+        function Pagination(page){
+            var name_search = jQuery('.name_search').val();
+
+            var contentm_name = jQuery(".userm_name").val();
+            var contentm_type = jQuery(".userm_type").val();
+            var parameters = {page: page, column_name : contentm_name, sort_type : contentm_type, name_search: name_search};
+            call_func(parameters,page);
+        }
+	});
+	jQuery(document.body).on('click', "#filter", function(){
+        jQuery('#clear').show();
+        var name_search = jQuery('.name_search').val();
+        if(name_search =='')
+        {
+            jQuery('#clear').hide();
+        }
+        
+        var contentm_name = jQuery(".userm_name").val();
+        var contentm_type = jQuery(".userm_type").val();
+        var parameters = {column_name: contentm_name, sort_type: contentm_type, page: 1, name_search: name_search};
+            call_func(parameters,1);
+        
+    });
+    jQuery(document.body).on('click', "#clear", function(){
+        jQuery('.name_search').val('');
+        jQuery('#filter').trigger('click');
+    });
+	jQuery(document.body).on('change', "#user_all", function(){
+        if(this.checked) {
+            jQuery(".custom-control-input").prop('checked', true);
+        }
+        else
+        {
+            jQuery(".custom-control-input").prop('checked', false);
+        }
+    });
+
+    function call_func(parameters,page)
+    {
+        $.post('/cs-admin/user_management/paginateUser',JSON.stringify(parameters), function(data) {
+            if(data != "")
+            {
+                jQuery(".user_management_field").html(data);
+
+                var page_count = jQuery(".pagination_filter_total_count").val();        
+                $('#paginate_content').twbsPagination('destroy');
+                $('#paginate_content').twbsPagination({
+                    startPage:page,
+                    totalPages: page_count,
+                    visiblePages: 5,
+                    first:'<i class="fa fa-angle-double-left"/>',
+                    next: '<i class="fa fa-angle-right"/>',
+                    prev: '<i class="fa fa-angle-left"/>',
+                    last: '<i class="fa fa-angle-double-right"/>',
+                    initiateStartPageClick: false,
+                    onPageClick: function (event, page) {
+                        Pagination(page);
+                    }
+                }); 
+
+                function Pagination(page){
+                    var name_search = jQuery('.name_search').val();
+
+                    var contentm_name = jQuery(".userm_name").val();
+                    var contentm_type = jQuery(".userm_type").val();
+                    var parameters = {page: page, column_name : contentm_name, sort_type : contentm_type, name_search: name_search};
+                    call_func(parameters,page);
+                }
+            }
+        });
+    }
+
+    $(document).on("click", '.callInvite', function () {
+        $("#inviteModal").modal("show");
+    });
+
+    $(document).on("click", '#setInvite', function () {
+        var valid = $("#inviteForm").valid();
+        if(valid){
+        	data = {};
+			data.inviteEmail = document.getElementById('invite_email').value;
+			data.inviteType = inviteType;
+			$.ajax({
+	            url: '/cs-admin/user_management/inviteUser',
+	            data: JSON.stringify(data),
+	            type: 'POST',
+	            success: function (resp) {
+	                if(resp.msg == "success"){
+	                	swal("",resp.succMsg,"success");
+	                	setTimeout(function(){window.location.reload();},2000);
+					} else {
+						swal("",resp.errMsg,"error");
+					}
+	            },
+	            error: function (err) {
+	                swal("","Error in Processing.Try again later","error");
+	                setTimeout(function(){window.location.reload();},2000);
+	            }
+	        });
+        }
+    });
+</script>
+<%- include("../../common/admin_footer.ejs") %>

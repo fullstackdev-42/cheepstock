@@ -1,0 +1,84 @@
+@font-face {
+  font-family: Montserrat-Regular;
+  src: url(fonts/Montserrat-Regular.ttf);
+}
+@font-face {
+  font-family: Montserrat-Medium;
+  src: url(fonts/Montserrat-Medium.ttf);
+}
+@font-face {
+  font-family: Montserrat-Bold;
+  src: url(fonts/Montserrat-Bold.ttf);
+}
+@font-face {
+  font-family: Montserrat-Light;
+  src: url(fonts/Montserrat-Light.ttf);
+}
+
+html,body {
+  font-family: Montserrat-Regular;
+  font-size: 16px;
+}
+html,body {
+  font-family: Montserrat-Medium;
+  font-size: 16px;
+}
+.footer {
+  background-color: #3452B5;
+  padding: 15px;
+  color: #fff;
+}
+.footer p { margin: 0px;text-align: center; }
+.container {
+  min-height: calc(100vh - 120px);
+}
+.siteBtn {
+  background: #FFC235;
+  border-radius: 25px;
+  padding: 10px 30px;
+  border: none;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.6s;
+}
+
+.siteBtn:active, .siteBtn:focus {
+  outline: none;
+}
+
+.siteBtn span{
+  position: relative;
+  z-index: 2;
+}
+
+.siteBtn:hover, .siteBtn-sm-rad:hover {
+  background: #ecac17;
+  color: #000;
+}
+
+/*.siteBtn:before {
+  content: "";
+  position: absolute;
+  height: 0%;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  z-index: 1;
+  -webkit-transition: all 0.75s ease 0s;
+  -moz-transition: all 0.75s ease 0s;
+  -o-transition: all 0.75s ease 0s;
+  transition: all 0.75s ease 0s;
+  opacity: 0;
+  background-image: -webkit-linear-gradient( transparent 50%, rgba(0,0,0,0.15) 50%);
+  background-image: -moz-linear-gradient(transparent 50%, rgba(0,0,0,0.15) 50%);
+  background-size: 10px 10px;
+  -moz-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  -ms-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  -webkit-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+  transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+}
+.siteBtn:hover:before {
+  height: 600% !important;
+  opacity: 1;
+  color: #FFF;
+}*/

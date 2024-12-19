@@ -1,0 +1,124 @@
+@media only screen and (min-width: 571px) and (max-width: 1240px) {
+	.bannerTxt1{
+		width: 70% !important;
+	}
+}
+@media only screen and (max-width: 570px) {
+	.bannerTxt1{
+		width: 90% !important;
+	    font-size: 44px;
+	}
+}
+@media only screen and (max-width: 400px) {
+	.searchBox #searchBoxTxt{
+		padding: 0 60px 0 40px !important;
+	}
+	.searchBox img{
+		width: 30px;
+	    right: 20px !important;
+	    top: 25px !important;
+	}
+}
+
+@media only screen and (max-width: 991px) {
+	.boxUI{
+		height: 226px !important;
+	}
+	.boxUI img{
+		object-fit: cover;
+    	height: 176px !important;
+	}
+	.footer .footSec1{
+		flex: 0 0 100%;
+    	max-width: 100%;
+    	text-align: center;
+    	margin-bottom: 20px;
+	}
+	.footer .footSec2{
+		flex: 0 0 100%;
+    	max-width: 100%;
+    	text-align: center;
+    	margin-bottom: 20px;
+	}
+	.footer .footSec3{
+		flex: 0 0 100%;
+    	max-width: 100%;
+    	text-align: center;
+    	margin-bottom: 20px;
+	}
+	.footSec3 .socialicons{
+		justify-content: center !important;
+	}
+	.footSec3 .socialicons i{
+		margin-right: 10px;
+	}
+	.footer .footSec1 img{
+		height: auto;
+		width: auto;
+	}
+}
+@media only screen and (min-width: 576px) and (max-width: 991px) {
+	.section2 .categoriesList ul{
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+	.section3 .boxUISec3{
+		padding: 25px !important;
+	}
+	.section3 .secSubContent{
+		min-height: 200px !important;
+	}
+}
+@media only screen and (max-width: 575px) {
+	.section1 .sec1Ele{
+		padding: 0px !important;
+		margin-bottom: 20px !important;
+		margin-top: 0px !important;
+	}
+	.section5 .sec5Ele{
+		padding: 0px !important;
+		margin-bottom: 20px !important;
+	}
+	.section3 .sec3Ele {
+		margin-top: 20px !important;
+		padding-bottom: 20px;
+	}
+	.section2 .categoriesList ul{
+		grid-template-columns: repeat(1, 1fr) !important;
+	}
+	.spacer{display: none !important;}
+	.footer .footSec2 .containerrow{
+		flex-direction: column !important;
+	}
+	.footer .footSec2 .containercolumn{
+		width: auto !important;
+		padding-top: 30px;
+    	padding-right: 0 !important;
+	}
+}
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+	.section3{
+		height: auto !important;
+	}
+	.section3 .sec3Ele {
+		padding-bottom: 25px;
+	}
+	.section4 .sec4Ele{
+		padding: 0px !important;
+		margin-bottom: 20px !important;	
+	}
+	.separator{
+		margin: 30px 0 !important;
+	}
+	.footSec1{
+		text-align: center;
+	}
+	.section3 .secSubHeading,.section3 .secSubContent, .section4, .section4 .secSubHeading, .section4 .secSubContent{
+		text-align: center;
+	}
+}
+
+@media only screen and (min-width: 320px) and (max-width: 430px) {
+	.menubar .container > img{
+		width: 150px !important;
+	}
+}
